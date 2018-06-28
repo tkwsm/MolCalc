@@ -164,9 +164,14 @@ end
 
 if $0 == __FILE__
 
-  mc = AtomCalc.new
-  mc.listed_all
-  p mc.aw( "H" )
-  p mc.ram( "H" )
+#  mc = AtomCalc.new
+#  mc.listed_all
+#  p mc.aw( "H" )
+#  p mc.raw( "H" )
 
+  @mc = MolCalc.new
+  mf  = ARGV.shift
+#  print @mc.exact_molecular_mass( mf ).round(4), "\n"
+  print @mc.exact_molecular_mass( mf ), "\n"
+  
 end
