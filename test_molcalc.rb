@@ -15,9 +15,9 @@ class TC_ClassAtomlist < Test::Unit::TestCase
   # atomlist_array
     setup1
     assert_equal( 307, @ca.atomlist_array.size )
-    assert_equal( true, @ca.atomlist_array.include?(["H", 1.0078250319, 0.99985]))
+    assert_equal( true, @ca.atomlist_array.include?(["H",1.0078250319,0.99985]))
+    assert_equal( true, @ca.atomlist_array.include?(["As", 74.921594, 1.0]))
     assert_equal( true, @ca.atomlist_array.include?(["Lr", 260.0, 1.0]))
-
   end
 
   def test_chop_mol_formula
@@ -38,8 +38,19 @@ class TC_ClassAtomlist < Test::Unit::TestCase
     assert_equal( 1,  @ca.chop_mol_formula( "NaCl" )["Cl"] )
     assert_equal( 1,  @ca.chop_mol_formula( "C6H9Mg" )["Mg"] )
     assert_equal( 6,  @ca.chop_mol_formula( "C6H9Mg" )["C"] )
+    assert_equal( 2,  @ca.chop_mol_formula( "H2SeO4" )["H"] )
+    assert_equal( 1,  @ca.chop_mol_formula( "H2SeO4" )["Se"] )
+    assert_equal( 4,  @ca.chop_mol_formula( "H2SeO4" )["O"] )
+    assert_equal(["H", "O", "Se"],  @ca.chop_mol_formula( "H2SeO4" ).keys.sort )
+    assert_equal( 26,  @ca.chop_mol_formula( "C26H19Cl2N3O7" )["C"] )
+    assert_equal( 19,  @ca.chop_mol_formula( "C26H19Cl2N3O7" )["H"] )
+    assert_equal( 2,  @ca.chop_mol_formula( "C26H19Cl2N3O7" )["Cl"] )
+    assert_equal( 3,  @ca.chop_mol_formula( "C26H19Cl2N3O7" )["N"] )
+    assert_equal( 7,  @ca.chop_mol_formula( "C26H19Cl2N3O7" )["O"] )
+    assert_equal(["C","Cl","H","N","O"],  @ca.chop_mol_formula("C26H19Cl2N3O7").keys.sort )
+    assert_equal( 1,  @ca.chop_mol_formula( "Fe" )["Fe"] )
+    assert_equal( 2,  @ca.chop_mol_formula( "CH3COOH" )["C"] )
   end
-
 end
 
 class TC_AtomCalc < Test::Unit::TestCase
@@ -48,9 +59,9 @@ class TC_AtomCalc < Test::Unit::TestCase
     @obj = AtomCalc.new
   end
 
-  def test_listed_all
+#  def test_listed_all
 #    assert_equal( "", @obj.listed_all )
-  end
+#  end
 
   def test_atomic_wait
   #  atomic_wait( element )
@@ -69,8 +80,7 @@ class TC_AtomCalc < Test::Unit::TestCase
   end
 
   def test_major_exact_mass
-  #  major_exact_mass( element )
-    assert_equal( 1.0078250319, @obj.major_exact_mass( "H" ) )
+  #  major_exact_mass( element ) assert_equal( 1.0078250319, @obj.major_exact_mass( "H" ) )
   end
 
   def test_add_atomic_data
@@ -87,15 +97,20 @@ class TC_MolCalc < Test::Unit::TestCase
 
   def test_relative_molecular_mass
   # relative_molecular_mass
-    assert_equal( 16.04301103811886,  @mc.relative_molecular_mass("CH4") )
-#    assert_equal( 301.1877,  @mc.relative_molecular_mass("C8H16NO9P") )
+#    assert_equal( 16.04301103811886,  @mc.relative_molecular_mass("CH4") )
+#    assert_equal( 301.1877,  @mc.relative_molecular_mass("C8H16NO9P").round(4) )
   end
 
   def test_exact_molecular_mass
   # exact_molecular_mass
     assert_equal( 16.031300127599998, @mc.exact_molecular_mass("CH4") )
     assert_equal( 301.0562691185,  @mc.exact_molecular_mass("C8H16NO9P") )
-    assert_equal( 301.0563,  @mc.exact_molecular_mass("C8H16NO9P").round(4) )
+    assert_equal( 301.0563, @mc.exact_molecular_mass("C8H16NO9P").round(4) )
+    assert_equal( 559.0717, @mc.exact_molecular_mass("C15H23N5O14P2").round(4))
+    assert_equal( 145.9118, @mc.exact_molecular_mass("H2SeO4").round(4) )
+    assert_equal( 555.0600, @mc.exact_molecular_mass("C26H19Cl2N3O7").round(4))
+    assert_equal( 55.9349, @mc.exact_molecular_mass("Fe").round(4))
   end
 
 end
+
