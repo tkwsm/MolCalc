@@ -35,7 +35,11 @@ module Atomlist
           k = x
         elsif k != ""
           v = "1" if v == ""
-          h[ k ] = v.to_i
+          if h[ k ] == nil
+            h[ k ] = v.to_i 
+          else
+            h[ k ] += v.to_i 
+          end
           k = x
           v = ""
         end
@@ -45,11 +49,10 @@ module Atomlist
           exit
         elsif k != ""
           k << x
-          v = "1" if v == ""
-          h[ k ] = v.to_i
-          k = x
-          v = ""
         end
+      elsif x =~ /[\(\)=:]/       #   u for Cu, a for Na, etc.
+        STDERR.puts "Please use molecular formula or composition formula. You can't use '(', ')', '=' or ':' \n"
+        next
       end
     end
     if    k == ""     and v == ""
@@ -57,9 +60,17 @@ module Atomlist
       exit
     elsif k =~ /\D+/  and v == ""
       v = "1" if v == ""
-      h[ k ] = v.to_i
+      if h[ k ] == nil
+        h[ k ]  = v.to_i 
+      else
+        h[ k ] += v.to_i 
+      end
     elsif k =~ /\D/  and v =~ /\d/
-      h[ k ] = v.to_i
+      if h[ k ] == nil
+        h[ k ]  = v.to_i 
+      else
+        h[ k ] += v.to_i 
+      end
     end
     return h
   end
@@ -154,6 +165,7 @@ class MolCalc < AtomCalc
     mfh = chop_mol_formula( mf )
     num = 0
     mfh.each do |el, num|
+      next if @major_exact_mass[ el ] == nil
       emm += ( @major_exact_mass[ el ] * num )
     end
     return emm
