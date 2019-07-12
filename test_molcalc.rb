@@ -50,6 +50,8 @@ class TC_ClassAtomlist < Test::Unit::TestCase
     assert_equal(["C","Cl","H","N","O"],  @ca.chop_mol_formula("C26H19Cl2N3O7").keys.sort )
     assert_equal( 1,  @ca.chop_mol_formula( "Fe" )["Fe"] )
     assert_equal( 2,  @ca.chop_mol_formula( "CH3COOH" )["C"] )
+    assert_equal( 2,  @ca.chop_mol_formula( "CH3COOH" )["O"] )
+    assert_equal( 4,  @ca.chop_mol_formula( "CH3COOH" )["H"] )
   end
 end
 

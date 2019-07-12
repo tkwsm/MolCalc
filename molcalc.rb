@@ -1,5 +1,7 @@
 #!/usr/bin/ruby
 
+# should add a document here
+
 module Atomlist
 
   def atomlist_array( atomlist_file = "./atomlist" )
