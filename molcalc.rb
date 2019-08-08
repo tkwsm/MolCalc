@@ -153,6 +153,19 @@ class AtomCalc
 
 end
 
+class AdductDat
+
+  def initialize(  charge_sign, adduct_mw_divided_by_charge, charge, mult )
+    @charge_sign = charge_sign
+    @adduct_mw_divided_by_charge = adduct_mw_divided_by_charge
+    @charge      = charge
+    @mult        = mult
+  end
+
+  attr_reader :charge_sign, :adduct_mw_divided_by_charge, :charge, :mult
+    
+end
+   
 class MolCalc < AtomCalc
 
   def relative_molecular_mass( molecular_formula )
@@ -196,7 +209,7 @@ class MolCalc < AtomCalc
     return return_value
   end
 
-  def adduct_mw( adduct_formula, digit_accuracy )
+  def adduct_mw( adduct_formula, digit_accuracy=5 )
 
     ion_mw_value = 0.0
     ions   = []
@@ -318,9 +331,10 @@ class MolCalc < AtomCalc
     adduct_mw = 0.0
     ion_mws.each{ |sub_adduct_mw| adduct_mw += sub_adduct_mw }
     adduct_mw - ( charge * electron_dalton )
-    return [ charge_sign, (adduct_mw / charge.abs ).round( digit_accuracy), charge, mult ]
+    adduct_mw_divided_by_charge = (adduct_mw/charge.abs).round(digit_accuracy)
+    AdductDat.new( charge_sign, adduct_mw_divided_by_charge, charge, mult )
   end
-   
+
 end
 
 
@@ -339,7 +353,7 @@ if $0 == __FILE__
 #  mf  = ARGV.shift
 #  print mc.exact_molecular_mass( mf ).round(4), "\n"
 #  print mc.exact_molecular_mass( mf ), "\n"
-  mc.adduct_mw( "[M+C2H7N+H]+" )
+p  mc.adduct_mw( "[M+C2H7N+H]+" )
 #  print mc.exact_molecular_mass("C2H7N"), "\n"
 #  print mc.adduct_H, "\n"
 #  adduct_formula = "[M+NH4]+"
@@ -351,7 +365,8 @@ if $0 == __FILE__
 #  adduct_formula = "[M+5(NaCOOH)+Na-2H]-"
 #  mc.adduct_mw( adduct_formula )
   adduct_formula = "[M+3H]3+"
-  mc.adduct_mw( adduct_formula )
+p  mc.adduct_mw( adduct_formula )
 # [M+C2H7N+H]
   
 end
+
