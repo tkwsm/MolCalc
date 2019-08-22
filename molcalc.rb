@@ -155,14 +155,15 @@ end
 
 class AdductDat
 
-  def initialize(  charge_sign, adduct_mw_divided_by_charge, charge, mult )
+  def initialize(  charge_sign, adduct_mw, adduct_mw_divided_by_charge, charge, mult )
     @charge_sign = charge_sign
+    @adduct_mw   = adduct_mw
     @adduct_mw_divided_by_charge = adduct_mw_divided_by_charge
     @charge      = charge
     @mult        = mult
   end
 
-  attr_reader :charge_sign, :adduct_mw_divided_by_charge, :charge, :mult
+  attr_reader :charge_sign, :adduct_mw, :adduct_mw_divided_by_charge, :charge, :mult
     
 end
    
@@ -304,10 +305,10 @@ class MolCalc < AtomCalc
       elsif ion =~ /ACN/
         ion = "C2H3N" 
 #        ion_mws << ("#{ion_sign}"+"#{(ion_mult * ( exact_molecular_mass(ion) + electron_dalton))}").to_f
-        ion_mws << ("#{ion_sign}"+"#{(ion_mult * exact_molecular_mass(ion))}").to_f
+        ion_mws << ("#{ion_sign}"+"#{(ion_mult * exact_molecular_mass(ion) + electron_dalton )}").to_f
       elsif ion =~ /DMSO/
         ion = "C2H6OS" 
-        ion_mws << ("#{ion_sign}"+"#{(ion_mult * exact_molecular_mass(ion))}").to_f
+        ion_mws << ("#{ion_sign}"+"#{(ion_mult * exact_molecular_mass(ion) + electron_dalton )}").to_f
       elsif ion =~ /H2O/
         ion_mws << ("#{ion_sign}"+"#{(ion_mult * exact_molecular_mass(ion))}").to_f
       elsif ion =~ /Cl$/ or 
@@ -330,9 +331,9 @@ class MolCalc < AtomCalc
 
     adduct_mw = 0.0
     ion_mws.each{ |sub_adduct_mw| adduct_mw += sub_adduct_mw }
-    adduct_mw - ( charge * electron_dalton )
+##    adduct_mw = adduct_mw - ( charge * electron_dalton )
     adduct_mw_divided_by_charge = (adduct_mw/charge.abs).round(digit_accuracy)
-    AdductDat.new( charge_sign, adduct_mw_divided_by_charge, charge, mult )
+    AdductDat.new( charge_sign, adduct_mw, adduct_mw_divided_by_charge, charge, mult )
   end
 
 end
